@@ -4,17 +4,17 @@ import requests
 
 
 def usage():
-    print("Usage: {} <<server_url>> '<<query>>'".format(sys.argv[0]))
+    print("Usage: {} <<server_url>> '<<query>>' <<time>>".format(sys.argv[0]))
     print(
 """
 Example:
-query-prometheus.py http://localhost:9090 'irate(http_requests_total{code="200"}[1m])'
+query-prometheus.py http://localhost:9090 'irate(http_requests_total{code="200"}[1m]) 2020-01-01T00:00:00.000Z'
 """
     )
 
 def getArgs():
     try:
-        opts, args = getopt.getopt(sys.argv[1:], "hs:q:", ["help", "server_url=", "query="])
+        opts, args = getopt.getopt(sys.argv[1:], "hs:q:t:", ["help", "server_url=", "query=", "time="])
         if opts:
             return opts, args
         else:
@@ -38,13 +38,16 @@ def main():
             server_url = arg
         elif opt in ("-q", "--query"):
             query = arg
+        elif opt in ("-t", "--time"):
+            time = arg
         else:
             usage()
             assert False, "unhandled option"
 
     response = requests.get('{0}/api/v1/query'.format(server_url),
         params={
-            'query': '{}'.format(query)
+            'query': '{}'.format(query),
+            'time': '{}'.format(time)
         }
     )
     result = response.json()['data']['result']
