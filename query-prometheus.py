@@ -8,8 +8,8 @@ def usage():
     print(
 """
 Example:
-query-prometheus.py http://localhost:9090 'irate(http_requests_total{code="200"}[1m]) 2020-01-01T00:00:00.000Z'
-"""
+{} http://localhost:9090 'http_requests_total' 2020-01-01T00:00:00.000Z
+""".format(sys.argv[0])
     )
 
 def getArgs():
